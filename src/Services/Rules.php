@@ -5,7 +5,10 @@ namespace Recruitment\Services;
 class Rules
 {
     /** @var string */
-    private $name;
+    private $name = '';
+
+    /** @var string */
+    private $basicCategoryRule = '';
 
     /** @var array */
     private $findProductsRules = [];
@@ -58,6 +61,9 @@ class Rules
     {
         foreach ($matchProductsRules as $key => $rule) {
             if ($this->isMirrorRule($rule)) {
+                if ($rule['parameter'] === 'Kategoria') {
+                    $this->basicCategoryRule = $this->getReflectionRule($rule['parameter']);
+                }
                 $matchProductsRules[$key]['equals'] = $this->getReflectionRule($rule['parameter']);
             }
         }
