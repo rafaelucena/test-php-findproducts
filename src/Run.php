@@ -2,6 +2,8 @@
 
 namespace Recruitment;
 
+use Recruitment\Services\Search;
+
 class Run
 {
     /** @var array */
@@ -9,6 +11,9 @@ class Run
 
     /** @var array */
     private $rulesDecoded;
+
+    /** @var Search */
+    private $search;
 
     /**
      * @param array $inputs
@@ -59,8 +64,23 @@ class Run
         return $this;
     }
 
-    public function forest()
+    /**
+     * @return void
+     */
+    private function setSearch(): void
     {
-        $test = 'what now';
+        $startDecode = round(microtime(true) * 1000);
+        $this->search = new Search($this->rulesDecoded, $this->productsDecoded);
+        $endDecode = round(microtime(true) * 1000);
+
+        echo "Took to decode: " . (string)($endDecode - $startDecode) . "\n";
+    }
+
+    /**
+     * @return void
+     */
+    public function forest(): void
+    {
+        $this->setSearch();
     }
 }
