@@ -4,6 +4,12 @@ namespace Recruitment\Services;
 
 class Rules
 {
+    public const RESERVED_KEYWORDS = [
+        'any',
+        'this',
+        'is empty',
+    ];
+
     /** @var string */
     private $name = '';
 
