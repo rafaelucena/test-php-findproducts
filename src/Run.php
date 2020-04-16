@@ -40,28 +40,24 @@ class Run
 
     /**
      * @param string $productsPath
-     * @return self
+     * @return void
      */
-    private function setProductsDecoded(string $productsPath): self
+    private function setProductsDecoded(string $productsPath): void
     {
         // $this->productsDecoded = json_decode(file_get_contents(__DIR__ . '/../data/products_basic.json'), true);
         // $this->productsDecoded = json_decode(file_get_contents(__DIR__ . '/../data/products.json'), true);
         $this->productsDecoded = json_decode(file_get_contents(__DIR__ . '/../data/products_big.json'), true);
-
-        return $this;
     }
 
     /**
      * @param string $rulesPath
-     * @return self
+     * @return void
      */
-    private function setRulesDecoded(string $rulesPath): self
+    private function setRulesDecoded(string $rulesPath): void
     {
         // $this->rulesDecoded = json_decode(file_get_contents(__DIR__ . '/../data/rule.json'), true);
         // $this->rulesDecoded = json_decode(file_get_contents(__DIR__ . '/../data/rule_big.json'), true);
         $this->rulesDecoded = json_decode(file_get_contents(__DIR__ . '/../data/rule_male_female.json'), true);
-
-        return $this;
     }
 
     /**
