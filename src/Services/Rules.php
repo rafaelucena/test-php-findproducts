@@ -10,6 +10,9 @@ class Rules
     /** @var array */
     private $findProductsRules = [];
 
+    /** @var array */
+    private $matchProductsRules = [];
+
     /**
      * @param array $properties
      */
@@ -26,6 +29,7 @@ class Rules
     {
         $this->setName($properties['name']);
         $this->setFindProductsRules($properties['findProducts']);
+        $this->setMatchProductsRules($properties['matchProducts']);
     }
 
     /**
@@ -47,10 +51,56 @@ class Rules
     }
 
     /**
+     * @param array $matchProductsRules
+     * @return void
+     */
+    private function setMatchProductsRules(array $matchProductsRules): void
+    {
+        foreach ($matchProductsRules as $key => $rule) {
+            if ($this->isMirrorRule($rule)) {
+                $matchProductsRules[$key]['equals'] = $this->getReflectionRule($rule['parameter']);
+            }
+        }
+
+        $this->matchProductsRules = $matchProductsRules;
+    }
+
+    /**
+     * @param array $rule
+     * @return boolean
+     */
+    private function isMirrorRule(array $rule): bool
+    {
+        return $rule['equals'] === 'this';
+    }
+
+    /**
+     * @return string
+     */
+    private function getReflectionRule(string $parameter): string
+    {
+        foreach ($this->findProductsRules as $rule) {
+            if ($rule['parameter'] === $parameter) {
+                return $rule['equals'];
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * @return array
      */
     public function getFindProductsRules(): array
     {
         return $this->findProductsRules;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMatchProductsRules(): array
+    {
+        return $this->matchProductsRules;
     }
 }
