@@ -16,24 +16,18 @@ class Run
     /** @var Search */
     private $search;
 
-    /**
-     * @param array $inputs
-     */
-    public function __construct(array $inputs)
-    {
-        $this->mapInputs($inputs);
-        $this->setSearch();
-    }
+    /** @var Result */
+    private $result;
 
     /**
      * @param array $inputs
-     * @return void
+     * @return bool
      */
-    private function mapInputs(array $inputs): void
+    public function prepare(array $inputs): bool
     {
         if (count($inputs) !== 3) {
-            echo sprintf('This script must have exactly 2 parameters, %d given' . "\n", count($inputs));
-            exit;
+            echo sprintf('This script must have exactly 2 parameters, %d given' . "\n", (count($inputs) - 1));
+            return false;
         }
 
         foreach ($inputs as $key => $input) {
@@ -42,12 +36,13 @@ class Run
             }
             if (file_exists($input) === false) {
                 echo sprintf('File: \'%s\' does not exist, please fix the path or add the file.' . "\n", $input);
-                exit;
+                return false;
             }
         }
 
         $this->setProductsDecoded($inputs[1]);
         $this->setRulesDecoded($inputs[2]);
+        return true;
     }
 
     /**
@@ -71,7 +66,7 @@ class Run
     /**
      * @return void
      */
-    private function setSearch(): void
+    private function doSearch(): void
     {
         $this->search = new Search($this->rulesDecoded, $this->productsDecoded);
     }
@@ -79,11 +74,20 @@ class Run
     /**
      * @return void
      */
-    public function forest(): void
+    private function doResult(): void
     {
-        $result = new Result($this->search->getProductsFound(), $this->search->getProductsMatched());
-        $result->buildResponse();
-        echo $result->getResponseJson() . "\n";
+        $this->result = new Result($this->search->getProductsFound(), $this->search->getProductsMatched());
+        $this->result->buildResponse();
+    }
+
+    /**
+     * @return void
+     */
+    public function execute(): void
+    {
+        $this->doSearch();
+        $this->doResult();
+        echo $this->result->getResponseJson() . "\n";
         // echo "Took to search: " . $this->search->getExecutionTime() . "\n";
         // echo "Took to group: " . $result->getExecutionTime() . "\n";
     }
