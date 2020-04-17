@@ -2,18 +2,10 @@
 
 namespace Recruitment\Services;
 
+use Recruitment\Helpers\RulesHelper;
+
 class Rules
 {
-    private const KEYWORD_ANY = 'any';
-    private const KEYWORD_THIS = 'this';
-    private const KEYWORD_IS_EMPTY = 'is empty';
-
-    public const RESERVED_KEYWORDS = [
-        self::KEYWORD_ANY,
-        self::KEYWORD_THIS,
-        self::KEYWORD_IS_EMPTY,
-    ];
-
     /** @var string */
     private $name = '';
 
@@ -43,9 +35,9 @@ class Rules
      */
     public function fromArray(array $properties): void
     {
-        $this->setName($properties['name']);
-        $this->setFindProductsRules($properties['findProducts']);
-        $this->setMatchProductsRules($properties['matchProducts']);
+        $this->setName($properties[RulesHelper::PROPERTY_NAME]);
+        $this->setFindProductsRules($properties[RulesHelper::PROPERTY_FIND]);
+        $this->setMatchProductsRules($properties[RulesHelper::PROPERTY_MATCH]);
         $this->setIntersectedParameters();
     }
 
@@ -75,10 +67,11 @@ class Rules
     {
         foreach ($matchProductsRules as $key => $rule) {
             if ($this->isMirrorRule($rule)) {
-                if ($rule['parameter'] === 'Kategoria') {
-                    $this->basicCategoryRule = $this->getReflectionRule($rule['parameter']);
+                if ($rule[RulesHelper::SUBPROPERTY_PARAMETER] === 'Kategoria') {
+                    $this->basicCategoryRule = $this->getReflectionRule($rule[RulesHelper::SUBPROPERTY_PARAMETER]);
                 }
-                $matchProductsRules[$key]['equals'] = $this->getReflectionRule($rule['parameter']);
+                $parameter = $rule[RulesHelper::SUBPROPERTY_PARAMETER];
+                $matchProductsRules[$key][RulesHelper::SUBPROPERTY_EQUALS] = $this->getReflectionRule($parameter);
             }
         }
 
@@ -91,7 +84,7 @@ class Rules
      */
     private function isMirrorRule(array $rule): bool
     {
-        return $rule['equals'] === 'this';
+        return $rule[RulesHelper::SUBPROPERTY_EQUALS] === RulesHelper::RESERVED_KEYWORD_THIS;
     }
 
     /**
@@ -100,8 +93,8 @@ class Rules
     private function getReflectionRule(string $parameter): string
     {
         foreach ($this->findProductsRules as $rule) {
-            if ($rule['parameter'] === $parameter) {
-                return $rule['equals'];
+            if ($rule[RulesHelper::SUBPROPERTY_PARAMETER] === $parameter) {
+                return $rule[RulesHelper::SUBPROPERTY_EQUALS];
             }
         }
 
@@ -113,18 +106,27 @@ class Rules
      */
     private function setIntersectedParameters(): void
     {
-        $findRules = array_column($this->findProductsRules, 'equals', 'parameter');
-        $matchRules = array_column($this->matchProductsRules, 'equals', 'parameter');
+        $findRules = $this->getArrayColumnRules($this->findProductsRules);
+        $matchRules = $this->getArrayColumnRules($this->matchProductsRules);
 
         $intersectedResult = array_intersect($findRules, $matchRules);
         foreach ($intersectedResult as $key => $value) {
-            if ($value === 'is empty') {
+            if ($value === RulesHelper::RESERVED_KEYWORD_IS_EMPTY) {
                 unset($intersectedResult[$key]);
             }
         }
 
         // In here we save only the keys of the intersected array for using later
         $this->intersectedParameters = array_keys($intersectedResult);
+    }
+
+    /**
+     * @param array $input
+     * @return array
+     */
+    private function getArrayColumnRules(array $input): array
+    {
+        return array_column($input, RulesHelper::SUBPROPERTY_EQUALS, RulesHelper::SUBPROPERTY_PARAMETER);
     }
 
     /**
