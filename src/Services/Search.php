@@ -49,14 +49,31 @@ class Search
                 continue;
             }
             if ($this->passMainProductsRules($product, 'find') === true) {
+                $product['beacon'] = $this->setBeacon($product['parameters']);
                 $this->productsFound[] = $product;
             }
             if ($this->passMainProductsRules($product, 'match') === true) {
+                if (isset($product['beacon']) === false) {
+                    $product['beacon'] = $this->setBeacon($product['parameters']);
+                }
                 $this->productsMatched[] = $product;
             }
         }
         $endSearch = round(microtime(true) * 1000);
         $this->setExecutionTime($endSearch - $startSearch);
+    }
+
+    /**
+     * @param array $parameters
+     * @return string
+     */
+    private function setBeacon(array $parameters): string
+    {
+        $arrayFound = array_filter($parameters, function ($arrayKey) {
+            return in_array($arrayKey, $this->rules->getIntersectedParameters());
+        }, ARRAY_FILTER_USE_KEY);
+
+        return md5(json_encode($arrayFound));
     }
 
     /**
