@@ -4,10 +4,14 @@ namespace Recruitment\Services;
 
 class Rules
 {
+    private const KEYWORD_ANY = 'any';
+    private const KEYWORD_THIS = 'this';
+    private const KEYWORD_IS_EMPTY = 'is empty';
+
     public const RESERVED_KEYWORDS = [
-        'any',
-        'this',
-        'is empty',
+        self::KEYWORD_ANY,
+        self::KEYWORD_THIS,
+        self::KEYWORD_IS_EMPTY,
     ];
 
     /** @var string */
@@ -98,6 +102,14 @@ class Rules
         }
 
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getBasicCategoryRule(): string
+    {
+        return $this->basicCategoryRule;
     }
 
     /**
