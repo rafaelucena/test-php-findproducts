@@ -3,9 +3,12 @@
 namespace Recruitment\Services;
 
 use Recruitment\Services\Rules;
+use Recruitment\Traits\Performance;
 
 class Search
 {
+    use Performance;
+
     /** @var Rules */
     private $rules;
 
@@ -40,6 +43,7 @@ class Search
      */
     private function searchProducts(array $produtsDecoded): void
     {
+        $startSearch = round(microtime(true) * 1000);
         foreach ($produtsDecoded as $product) {
             if ($this->passBasicCategoryRule($product) === false) {
                 continue;
@@ -51,13 +55,8 @@ class Search
                 $this->productsMatched[] = $product;
             }
         }
-
-        // $this->rules->setProducts($produtsDecoded);
-        echo "Found products: " . count($this->getProductsFound()) . "\n";
-        echo "Matched products: " . count($this->getProductsMatched()) . "\n";
-        // $this->rules->getProductsMatched();
-
-        // $this->rules->getAnyProductMatched();
+        $endSearch = round(microtime(true) * 1000);
+        $this->setExecutionTime($endSearch - $startSearch);
     }
 
     /**
@@ -66,11 +65,11 @@ class Search
      */
     private function passBasicCategoryRule(array $product): bool
     {
-        if (empty($this->rules->basicCategoryRule) === true) {
+        if (empty($this->rules->getBasicCategoryRule()) === true) {
             return true;
         }
 
-        if ($product['id_category'] === $this->basicCategoryRule) {
+        if ($product['id_category'] === $this->rules->getBasicCategoryRule()) {
             return true;
         }
 
@@ -162,20 +161,5 @@ class Search
     public function getProductsMatched(): array
     {
         return $this->productsMatched;
-    }
-
-    public function getAnyProductMatched()
-    {
-        $total = count($this->productsMatched);
-        $randomElement = random_int(0, $total);
-
-        $count = 0;
-        foreach ($this->productsMatched as $product) {
-            if ($count === $randomElement) {
-                var_dump($product);
-                die;
-            }
-            $count++;
-        }
     }
 }
