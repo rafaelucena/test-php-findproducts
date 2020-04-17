@@ -3,6 +3,7 @@
 namespace Recruitment;
 
 use Recruitment\Services\Search;
+use Recruitment\Services\Result;
 
 class Run
 {
@@ -21,6 +22,7 @@ class Run
     public function __construct(array $inputs)
     {
         $this->mapInputs($inputs);
+        $this->setSearch();
     }
 
     /**
@@ -30,8 +32,18 @@ class Run
     private function mapInputs(array $inputs): void
     {
         if (count($inputs) !== 3) {
-            echo "This script must have exactly two parameters\n";
-            return;
+            echo sprintf('This script must have exactly 2 parameters, %d given' . "\n", count($inputs));
+            exit;
+        }
+
+        foreach ($inputs as $key => $input) {
+            if ($key === 0) {
+                continue;
+            }
+            if (file_exists($input) === false) {
+                echo sprintf('File: \'%s\' does not exist, please fix the path or add the file.' . "\n", $input);
+                exit;
+            }
         }
 
         $this->setProductsDecoded($inputs[1]);
@@ -44,9 +56,7 @@ class Run
      */
     private function setProductsDecoded(string $productsPath): void
     {
-        // $this->productsDecoded = json_decode(file_get_contents(__DIR__ . '/../data/products_basic.json'), true);
-        // $this->productsDecoded = json_decode(file_get_contents(__DIR__ . '/../data/products.json'), true);
-        $this->productsDecoded = json_decode(file_get_contents(__DIR__ . '/../data/products_big.json'), true);
+        $this->productsDecoded = json_decode(file_get_contents($productsPath), true);
     }
 
     /**
@@ -55,9 +65,7 @@ class Run
      */
     private function setRulesDecoded(string $rulesPath): void
     {
-        // $this->rulesDecoded = json_decode(file_get_contents(__DIR__ . '/../data/rule.json'), true);
-        // $this->rulesDecoded = json_decode(file_get_contents(__DIR__ . '/../data/rule_big.json'), true);
-        $this->rulesDecoded = json_decode(file_get_contents(__DIR__ . '/../data/rule_male_female.json'), true);
+        $this->rulesDecoded = json_decode(file_get_contents($rulesPath), true);
     }
 
     /**
@@ -65,11 +73,7 @@ class Run
      */
     private function setSearch(): void
     {
-        $startDecode = round(microtime(true) * 1000);
         $this->search = new Search($this->rulesDecoded, $this->productsDecoded);
-        $endDecode = round(microtime(true) * 1000);
-
-        echo "Took to decode: " . (string)($endDecode - $startDecode) . "\n";
     }
 
     /**
@@ -77,6 +81,10 @@ class Run
      */
     public function forest(): void
     {
-        $this->setSearch();
+        $result = new Result($this->search->getProductsFound(), $this->search->getProductsMatched());
+        $result->buildResponse();
+        echo $result->getResponseJson() . "\n";
+        // echo "Took to search: " . $this->search->getExecutionTime() . "\n";
+        // echo "Took to group: " . $result->getExecutionTime() . "\n";
     }
 }
