@@ -2,6 +2,8 @@
 
 namespace Recruitment\Services;
 
+use Recruitment\Helpers\ProductHelper;
+use Recruitment\Helpers\RulesHelper;
 use Recruitment\Services\Rules;
 use Recruitment\Traits\Performance;
 
@@ -49,12 +51,14 @@ class Search
                 continue;
             }
             if ($this->passMainProductsRules($product, 'find') === true) {
-                $product['beacon'] = $this->setBeacon($product['parameters']);
+                $parameters = $product[ProductHelper::PROPERTY_PARAMETERS];
+                $product[ProductHelper::PROPERTY_BEACON] = $this->setBeacon($parameters);
                 $this->productsFound[] = $product;
             }
             if ($this->passMainProductsRules($product, 'match') === true) {
-                if (isset($product['beacon']) === false) {
-                    $product['beacon'] = $this->setBeacon($product['parameters']);
+                if (isset($product[ProductHelper::PROPERTY_BEACON]) === false) {
+                    $parameters = $product[ProductHelper::PROPERTY_PARAMETERS];
+                    $product[ProductHelper::PROPERTY_BEACON] = $this->setBeacon($parameters);
                 }
                 $this->productsMatched[] = $product;
             }
@@ -87,7 +91,7 @@ class Search
             return true;
         }
 
-        if ($product['id_category'] === $this->rules->getBasicCategoryRule()) {
+        if ($product[ProductHelper::PROPERTY_ID_CATEGORY] === $this->rules->getBasicCategoryRule()) {
             return true;
         }
 
@@ -109,11 +113,11 @@ class Search
         }
 
         foreach ($rules as $rule) {
-            if ($this->detectedReservedKeyword($rule['equals'])) {
-                if ($this->validReservedCheck($product['parameters'], $rule) === false) {
+            if ($this->detectedReservedKeyword($rule[RulesHelper::SUBPROPERTY_EQUALS])) {
+                if ($this->validReservedCheck($product[ProductHelper::PROPERTY_PARAMETERS], $rule) === false) {
                     return false;
                 }
-            } elseif ($this->validCommonCheck($product['parameters'], $rule) === false) {
+            } elseif ($this->validCommonCheck($product[ProductHelper::PROPERTY_PARAMETERS], $rule) === false) {
                 return false;
             }
         }
@@ -127,7 +131,7 @@ class Search
      */
     private function detectedReservedKeyword(string $keyword): bool
     {
-        return in_array($keyword, Rules::RESERVED_KEYWORDS);
+        return in_array($keyword, RulesHelper::RESERVED_KEYWORDS);
     }
 
     /**
@@ -137,11 +141,11 @@ class Search
      */
     private function validReservedCheck(array $parameters, array $rule): bool
     {
-        $equals = $rule['equals'];
-        $key = $rule['parameter'];
-        if ($equals === 'any' && isset($parameters[$key])) {
+        $equals = $rule[RulesHelper::SUBPROPERTY_EQUALS];
+        $key = $rule[RulesHelper::SUBPROPERTY_PARAMETER];
+        if ($equals === RulesHelper::RESERVED_KEYWORD_ANY && isset($parameters[$key])) {
             return true;
-        } elseif ($equals === 'is empty' && isset($parameters[$key]) === false) {
+        } elseif ($equals === RulesHelper::RESERVED_KEYWORD_IS_EMPTY && isset($parameters[$key]) === false) {
             return true;
         }
 
@@ -155,10 +159,10 @@ class Search
      */
     private function validCommonCheck(array $parameters, array $rule): bool
     {
-        if (isset($parameters[$rule['parameter']]) === false) {
+        if (isset($parameters[$rule[RulesHelper::SUBPROPERTY_PARAMETER]]) === false) {
             return false;
         }
-        if ($parameters[$rule['parameter']] !== $rule['equals']) {
+        if ($parameters[$rule[RulesHelper::SUBPROPERTY_PARAMETER]] !== $rule[RulesHelper::SUBPROPERTY_EQUALS]) {
             return false;
         }
 
