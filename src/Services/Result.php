@@ -2,6 +2,7 @@
 
 namespace Recruitment\Services;
 
+use Recruitment\Helpers\ProductHelper;
 use Recruitment\Traits\Performance;
 
 class Result
@@ -59,15 +60,17 @@ class Result
         $startResponse = round(microtime(true) * 1000);
         // first grouping matched products by the beacon
         foreach ($this->productsMatched as $productMatched) {
-            $prepareMatch[$productMatched['beacon']][$productMatched['symbol']] = $productMatched['symbol'];
+            $beacon = $productMatched[ProductHelper::PROPERTY_BEACON];
+            $symbol = $productMatched[ProductHelper::PROPERTY_SYMBOL];
+            $prepareMatch[$beacon][$symbol] = $symbol;
         }
 
         // then assigning the groups into each found product preventing duplicates
         foreach ($this->productsFound as $productFound) {
-            $this->symbolSearch = $productFound['symbol'];
+            $this->symbolSearch = $productFound[ProductHelper::PROPERTY_SYMBOL];
 
             $response[$this->symbolSearch] = [];
-            $beacon = $productFound['beacon'];
+            $beacon = $productFound[ProductHelper::PROPERTY_BEACON];
             if (isset($prepareMatch[$beacon])) {
                 $arrayFiltered = $this->getProductsMatchedWithoutSelf($prepareMatch[$beacon]);
                 $response[$this->symbolSearch] = array_values($arrayFiltered);
