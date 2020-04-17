@@ -69,11 +69,12 @@ class Search
      */
     private function setBeacon(array $parameters): string
     {
-        $arrayFound = array_filter($parameters, function ($arrayKey) {
+        $callback = function ($arrayKey) {
             return in_array($arrayKey, $this->rules->getIntersectedParameters());
-        }, ARRAY_FILTER_USE_KEY);
+        };
+        $arrayFiltered = array_filter($parameters, $callback, ARRAY_FILTER_USE_KEY);
 
-        return md5(json_encode($arrayFound));
+        return md5(json_encode($arrayFiltered));
     }
 
     /**
