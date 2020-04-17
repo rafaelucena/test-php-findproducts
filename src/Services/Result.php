@@ -48,7 +48,6 @@ class Result
         $this->productsMatched = $productsMatched;
     }
 
-
     /**
      * @return void
      */
@@ -63,7 +62,7 @@ class Result
             $prepareMatch[$productMatched['beacon']][$productMatched['symbol']] = $productMatched['symbol'];
         }
 
-        // then assigning the groups into each found product without repeating the symbol inside and outside of the array
+        // then assigning the groups into each found product preventing duplicates
         foreach ($this->productsFound as $productFound) {
             $this->symbolSearch = $productFound['symbol'];
 
