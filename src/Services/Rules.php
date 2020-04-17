@@ -26,6 +26,9 @@ class Rules
     /** @var array */
     private $matchProductsRules = [];
 
+    /** @var array */
+    private $intersectedParameters = [];
+
     /**
      * @param array $properties
      */
@@ -43,6 +46,7 @@ class Rules
         $this->setName($properties['name']);
         $this->setFindProductsRules($properties['findProducts']);
         $this->setMatchProductsRules($properties['matchProducts']);
+        $this->setIntersectedParameters();
     }
 
     /**
@@ -105,6 +109,25 @@ class Rules
     }
 
     /**
+     * @return void
+     */
+    private function setIntersectedParameters(): void
+    {
+        $findRules = array_column($this->findProductsRules, 'equals', 'parameter');
+        $matchRules = array_column($this->matchProductsRules, 'equals', 'parameter');
+
+        $intersectedResult = array_intersect($findRules, $matchRules);
+        foreach ($intersectedResult as $key => $value) {
+            if ($value === 'is empty') {
+                unset($intersectedResult[$key]);
+            }
+        }
+
+        // In here we save only the keys of the intersected array for using later
+        $this->intersectedParameters = array_keys($intersectedResult);
+    }
+
+    /**
      * @return string
      */
     public function getBasicCategoryRule(): string
@@ -126,5 +149,13 @@ class Rules
     public function getMatchProductsRules(): array
     {
         return $this->matchProductsRules;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIntersectedParameters(): array
+    {
+        return $this->intersectedParameters;
     }
 }
