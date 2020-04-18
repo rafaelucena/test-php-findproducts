@@ -71,12 +71,22 @@ class Search
      */
     private function setBeacon(array $parameters): string
     {
-        $callback = function ($arrayKey) {
-            return in_array($arrayKey, $this->rules->getIntersectedParameters());
-        };
-        $arrayFiltered = array_filter($parameters, $callback, ARRAY_FILTER_USE_KEY);
+        $filteredParameters = $this->getFilteredParametersWithIntersection($parameters);
+        return md5(json_encode($filteredParameters));
+    }
 
-        return md5(json_encode($arrayFiltered));
+    /**
+     * @param array $parameters
+     * @return array
+     */
+    private function getFilteredParametersWithIntersection(array $parameters): array
+    {
+        $return = [];
+        foreach ($this->rules->getIntersectedParameters() as $intersectParameter) {
+            $return[$intersectParameter] = $parameters[$intersectParameter];
+        }
+
+        return $return;
     }
 
     /**
