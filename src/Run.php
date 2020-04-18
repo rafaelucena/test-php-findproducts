@@ -4,6 +4,7 @@ namespace Recruitment;
 
 use Recruitment\Services\Search;
 use Recruitment\Services\Result;
+use Recruitment\Services\Validate;
 
 class Run
 {
@@ -40,8 +41,16 @@ class Run
             }
         }
 
-        $this->setProductsDecoded($inputs[1]);
         $this->setRulesDecoded($inputs[2]);
+        if (Validate::validateRule($this->rulesDecoded) === false) {
+            echo 'Invalid rules are set' . "\n";
+            return false;
+        }
+        $this->setProductsDecoded($inputs[1]);
+        if (Validate::validateProduct($this->productsDecoded) === false) {
+            echo 'Invalid products are set' . "\n";
+            return false;
+        }
         return true;
     }
 
