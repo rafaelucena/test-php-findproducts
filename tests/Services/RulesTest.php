@@ -10,10 +10,10 @@ class RulesTest extends BaseTest
     /** @var Rules */
     private $rules;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $rules = json_decode(file_get_contents(__DIR__ . '/../../mocks/rule.json'), true);
-        $this->rules = new Rules($rules);
+        parent::setUp();
+        $this->rules = new Rules($this->source['rules']);
     }
 
     public function testGetArrayColumnNames()
