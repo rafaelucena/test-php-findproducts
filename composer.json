@@ -20,5 +20,13 @@
         "psr-4": {
             "Recruitment\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "phpunit": [
+            "./vendor/bin/phpunit"
+        ],
+        "sniffer": [
+            "./vendor/bin/phpcs -p"
+        ]
     }
 }
