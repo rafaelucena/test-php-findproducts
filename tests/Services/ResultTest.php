@@ -30,4 +30,14 @@ class ResultTest extends BaseTest
 
         $this->assertArrayNotHasKey($foundProductSymbol, $matchedGroupedWithoutSelf);
     }
+
+    public function testKeysAreNotDuplicatedInNestedArrays()
+    {
+        $this->result->buildResponse();
+        $response = $this->result->getResponse();
+
+        foreach ($response as $key => $item) {
+            $this->assertNotContains($key, $item);
+        }
+    }
 }

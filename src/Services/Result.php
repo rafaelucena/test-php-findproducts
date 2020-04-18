@@ -126,6 +126,14 @@ class Result
     }
 
     /**
+     * @return array
+     */
+    public function getResponse(): array
+    {
+        return $this->response;
+    }
+
+    /**
      * @return string
      */
     public function getResponseJson(): string
