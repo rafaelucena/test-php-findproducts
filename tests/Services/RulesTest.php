@@ -1,6 +1,6 @@
 <?php
 
-namespace Recruitment\Tests\Service;
+namespace Recruitment\Tests\Services;
 
 use Recruitment\Services\Rules;
 use Recruitment\Tests\BaseTest;
