@@ -82,14 +82,5 @@
             "Kategoria": "112995",
             "Rodzaj konektora": "męski"
         }
-    },
-    "99": {
-        "id": "99",
-        "symbol": "0000.1101.0699",
-        "id_category": "112996",
-        "parameters": {
-            "Kategoria": "112996",
-            "Rodzaj konektora": "męski"
-        }
     }
 }

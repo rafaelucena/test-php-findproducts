@@ -15,10 +15,6 @@
         {
             "parameter": "Szerokość",
             "equals": "any"
-        },
-        {
-            "parameter": "Typ akcesoriów do złącz",
-            "equals": "is empty"
         }
     ],
     "matchProducts": [{
@@ -36,10 +32,6 @@
         {
             "parameter": "Szerokość",
             "equals": "this"
-        },
-        {
-            "parameter": "Typ akcesoriów do złącz",
-            "equals": "is empty"
         }
     ]
 }
