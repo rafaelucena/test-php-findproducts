@@ -56,29 +56,61 @@ class Result
     {
         $response = [];
 
-        $prepareMatch = [];
         $startResponse = round(microtime(true) * 1000);
+
         // first grouping matched products by the beacon
-        foreach ($this->productsMatched as $productMatched) {
-            $beacon = $productMatched[ProductHelper::PROPERTY_BEACON];
-            $symbol = $productMatched[ProductHelper::PROPERTY_SYMBOL];
-            $prepareMatch[$beacon][$symbol] = $symbol;
-        }
-
+        $matchedProductsGrouped = $this->groupMatchedProducts();
         // then assigning the groups into each found product preventing duplicates
-        foreach ($this->productsFound as $productFound) {
-            $this->symbolSearch = $productFound[ProductHelper::PROPERTY_SYMBOL];
+        $response = $this->tieProductsMatchedWithFound($matchedProductsGrouped);
 
-            $response[$this->symbolSearch] = [];
-            $beacon = $productFound[ProductHelper::PROPERTY_BEACON];
-            if (isset($prepareMatch[$beacon])) {
-                $arrayFiltered = $this->getProductsMatchedWithoutSelf($prepareMatch[$beacon]);
-                $response[$this->symbolSearch] = array_values($arrayFiltered);
-            }
-        }
         $endResponse = round(microtime(true) * 1000);
         $this->setExecutionTime($endResponse - $startResponse);
         $this->response = $response;
+    }
+
+    /**
+     * @return array
+     */
+    private function groupMatchedProducts(): array
+    {
+        $prepareMatched = [];
+        foreach ($this->productsMatched as $productMatched) {
+            $beacon = $productMatched[ProductHelper::PROPERTY_BEACON];
+            $symbol = $productMatched[ProductHelper::PROPERTY_SYMBOL];
+            $prepareMatched[$beacon][$symbol] = $symbol;
+        }
+
+        return $prepareMatched;
+    }
+
+    /**
+     * @param array $groupedMatchedProducts
+     * @return array
+     */
+    private function tieProductsMatchedWithFound(array $groupedMatchedProducts): array
+    {
+        $tiedProducts = [];
+        foreach ($this->productsFound as $productFound) {
+            $this->setSymbolSearch($productFound[ProductHelper::PROPERTY_SYMBOL]);
+
+            $tiedProducts[$this->symbolSearch] = [];
+            $beacon = $productFound[ProductHelper::PROPERTY_BEACON];
+            if (isset($groupedMatchedProducts[$beacon])) {
+                $arrayFiltered = $this->getProductsMatchedWithoutSelf($groupedMatchedProducts[$beacon]);
+                $tiedProducts[$this->symbolSearch] = array_values($arrayFiltered);
+            }
+        }
+
+        return $tiedProducts;
+    }
+
+    /**
+     * @param string $symbolSearch
+     * @return void
+     */
+    private function setSymbolSearch(string $symbolSearch): void
+    {
+        $this->symbolSearch = $symbolSearch;
     }
 
     /**
