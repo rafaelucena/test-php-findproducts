@@ -35,4 +35,10 @@ class BaseTest extends TestCase
 
         return $method->invokeArgs($object, $methodParameters);
     }
+
+    public function testIfSourceArrayIsValid()
+    {
+        $this->assertNotEmpty($this->source['products']);
+        $this->assertNotEmpty($this->source['rules']);
+    }
 }
