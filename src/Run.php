@@ -68,7 +68,8 @@ class Run
      */
     private function doSearch(): void
     {
-        $this->search = new Search($this->rulesDecoded, $this->productsDecoded);
+        $this->search = new Search($this->rulesDecoded);
+        $this->search->searchProducts($this->productsDecoded);
     }
 
     /**

@@ -22,12 +22,10 @@ class Search
 
     /**
      * @param array $rulesDecoded
-     * @param array $productsDecoded
      */
-    public function __construct(array $rulesDecoded, array $productsDecoded)
+    public function __construct(array $rulesDecoded)
     {
         $this->setRules($rulesDecoded);
-        $this->searchProducts($productsDecoded);
     }
 
     /**
@@ -43,7 +41,7 @@ class Search
      * @param array $produtsDecoded
      * @return void
      */
-    private function searchProducts(array $produtsDecoded): void
+    public function searchProducts(array $produtsDecoded): void
     {
         $startSearch = round(microtime(true) * 1000);
         foreach ($produtsDecoded as $product) {
@@ -167,6 +165,14 @@ class Search
         }
 
         return true;
+    }
+
+    /**
+     * @return Rules
+     */
+    public function getRules(): Rules
+    {
+        return $this->rules;
     }
 
     /**

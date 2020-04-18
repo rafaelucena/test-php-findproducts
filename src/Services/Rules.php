@@ -88,6 +88,7 @@ class Rules
     }
 
     /**
+     * @param string $parameter
      * @return string
      */
     private function getReflectionRule(string $parameter): string
@@ -111,6 +112,7 @@ class Rules
 
         $intersectedResult = array_intersect($findRules, $matchRules);
         foreach ($intersectedResult as $key => $value) {
+            // Check and remove array key when is empty is set
             if ($value === RulesHelper::RESERVED_KEYWORD_IS_EMPTY) {
                 unset($intersectedResult[$key]);
             }
