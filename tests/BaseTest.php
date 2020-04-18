@@ -6,11 +6,26 @@ use PHPUnit\Framework\TestCase;
 
 class BaseTest extends TestCase
 {
+    /** @var array */
+    protected $source = [
+        'products' => [],
+        'rules' => [],
+    ];
+
+    /**
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        $this->source['products'] = json_decode(file_get_contents(__DIR__ . '/../mocks/products.json'), true);
+        $this->source['rules'] = json_decode(file_get_contents(__DIR__ . '/../mocks/rule.json'), true);
+    }
+
     /**
      * @param object $object
      * @param string $methodName
      * @param array $methodParameters
-     * @return void
+     * @return mixed
      */
     protected function callMethod(object $object, string $methodName, array $methodParameters)
     {
