@@ -1,6 +1,6 @@
 <?php
 
-namespace Recruitment\Tests\Service;
+namespace Recruitment\Tests\Services;
 
 use Recruitment\Services\Search;
 use Recruitment\Tests\BaseTest;
@@ -46,7 +46,8 @@ class SearchTest extends BaseTest
 
     public function testPassMainProductsRules()
     {
-        $notPassProductMatch = $passProductFind = $this->source['products'][42];
+        $passProductFind = $this->source['products'][42];
+        $notPassProductMatch = $this->source['products'][50];
         $this->assertTrue($this->callMethod($this->search, 'passMainProductsRules', [$passProductFind, 'find']));
         $this->assertFalse($this->callMethod($this->search, 'passMainProductsRules', [$notPassProductMatch, 'match']));
     }

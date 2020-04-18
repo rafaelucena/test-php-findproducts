@@ -1,0 +1,73 @@
+[{
+        "id": "42",
+        "symbol": "0000.1101.0606",
+        "id_category": "112995",
+        "parameters": {
+            "Kategoria": "112995",
+            "Rodzaj konektora": "męski",
+            "Długość": "23.2345",
+            "Szerokość": "23.2345"
+        },
+        "beacon": "b2d23bd10bf680d0b21a751f7d41c4be"
+    },
+    {
+        "id": "43",
+        "symbol": "0000.1101.0607",
+        "id_category": "112995",
+        "parameters": {
+            "Kategoria": "112995",
+            "Rodzaj konektora": "męski",
+            "Długość": "25",
+            "Szerokość": "25"
+        },
+        "beacon": "a857367f8aabf2a39cdc04b960fadcf9"
+    },
+    {
+        "id": "44",
+        "symbol": "0000.1101.0610",
+        "id_category": "112995",
+        "parameters": {
+            "Kategoria": "112995",
+            "Rodzaj konektora": "żeński",
+            "Długość": "23.2345",
+            "Szerokość": "23.2345"
+        },
+        "beacon": "b2d23bd10bf680d0b21a751f7d41c4be"
+    },
+    {
+        "id": "45",
+        "symbol": "0000.1101.0611",
+        "id_category": "112995",
+        "parameters": {
+            "Kategoria": "112995",
+            "Rodzaj konektora": "żeński",
+            "Długość": "25",
+            "Szerokość": "25"
+        },
+        "beacon": "a857367f8aabf2a39cdc04b960fadcf9"
+    },
+    {
+        "id": "47",
+        "symbol": "0000.1101.0615",
+        "id_category": "112995",
+        "parameters": {
+            "Kategoria": "112995",
+            "Rodzaj konektora": "żeński",
+            "Długość": "23.2345",
+            "Szerokość": "23.2345"
+        },
+        "beacon": "b2d23bd10bf680d0b21a751f7d41c4be"
+    },
+    {
+        "id": "49",
+        "symbol": "0000.1101.0608",
+        "id_category": "112995",
+        "parameters": {
+            "Kategoria": "112995",
+            "Rodzaj konektora": "męski",
+            "Długość": "20",
+            "Szerokość": "20"
+        },
+        "beacon": "b2b0cfb1fdd37db90a1113ac688523d6"
+    }
+]

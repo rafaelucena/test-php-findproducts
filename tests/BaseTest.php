@@ -10,6 +10,8 @@ class BaseTest extends TestCase
     protected $source = [
         'products' => [],
         'rules' => [],
+        'found' => [],
+        'matched' => [],
     ];
 
     /**
@@ -19,6 +21,8 @@ class BaseTest extends TestCase
     {
         $this->source['products'] = json_decode(file_get_contents(__DIR__ . '/../mocks/products.json'), true);
         $this->source['rules'] = json_decode(file_get_contents(__DIR__ . '/../mocks/rule.json'), true);
+        $this->source['found'] = json_decode(file_get_contents(__DIR__ . '/../mocks/found.json'), true);
+        $this->source['matched'] = json_decode(file_get_contents(__DIR__ . '/../mocks/matched.json'), true);
     }
 
     /**
